@@ -1,0 +1,81 @@
+/* --- Features Block Styles --- */
+.features.block {
+  width: 100%;
+  font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  box-sizing: border-box;
+}
+
+.features-banner-row {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.feature-banner-col {
+  flex: 1 1 33.333333%;
+  max-width: 33.333333%;
+  box-sizing: border-box;
+}
+
+/* Yellow Accent Shades Matching Design */
+.bg-main-1 { 
+  background-color: #f1b300; 
+}
+
+.bg-main-2 { 
+  background-color: #ebac00; 
+}
+
+.bg-main-3 { 
+  background-color: #e5a500; 
+}
+
+/* Card Content & Flex Layout */
+.feature-banner-card {
+  display: flex;
+  align-items: center;
+  padding: 35px 30px;
+}
+
+.feature-banner-icon {
+  flex: 0 0 50px;
+  margin-right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature-banner-icon i {
+  font-size: 42px;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.feature-banner-text h4 {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.2px;
+}
+
+.feature-banner-text p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 991px) {
+  .feature-banner-col {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .feature-banner-card {
+    padding: 25px 20px;
+  }
+}

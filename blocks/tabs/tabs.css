@@ -1,0 +1,84 @@
+.tabs .tabs-list {
+  display: flex;
+  gap: 12px;
+  max-width: 100%;
+  overflow-x: auto;
+  margin-bottom: 40px;
+  scrollbar-width: none; /* Hide scrollbar for clean look */
+}
+
+.tabs .tabs-list::-webkit-scrollbar {
+  display: none;
+}
+
+@media (width >= 600px) {
+  .tabs .tabs-list {
+    font-size: var(--body-font-size-s);
+  }
+}
+
+@media (width >= 900px) {
+  .tabs .tabs-list {
+    font-size: var(--body-font-size-m);
+  }
+}
+
+.tabs .tabs-list button {
+  flex: 0 0 max-content;
+  margin: 0;
+  border: none;
+  border-radius: 2px;
+  padding: 14px 24px;
+  background-color: #f1f1f1;
+  color: #333333;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.tabs .tabs-list button p {
+  margin: 0;
+}
+
+.tabs .tabs-list button:hover {
+  background-color: #ffbc00;
+  color: #ffffff;
+}
+
+.tabs .tabs-list button[aria-selected='true'] {
+  background-color: #ffbc00;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(255, 188, 0, 0.3);
+  position: relative;
+}
+
+/* Little speech-bubble indicator pointer under active tab matching reference design */
+.tabs .tabs-list button[aria-selected='true']::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 28px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid #ffbc00;
+}
+
+.tabs .tabs-panel {
+  margin-top: 0;
+  padding: 0;
+  border: none;
+  overflow: visible;
+}
+
+.tabs .tabs-panel[aria-hidden='true'] {
+  display: none;
+}

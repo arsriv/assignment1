@@ -1,27 +1,144 @@
-.cards > ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
-  gap: 24px;
-}
-
-.cards > ul > li {
-  border: 1px solid #dadada;
-  background-color: var(--background-color);
-}
-
-.cards .cards-card-body {
-  margin: 16px;
-}
-
-.cards .cards-card-image {
-  line-height: 0;
-}
-
-.cards > ul > li img {
+/* --- Cards Block Grid Layout --- */
+.cards.block {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  box-sizing: border-box;
+}
+
+.cards-grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 35px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* --- Card Structure & Styling --- */
+.cards-item {
+  background-color: #f7f7f7;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+}
+
+/* Hover Effect: Card lifts upward with enhanced shadow */
+.cards-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+/* --- Card Image Container --- */
+.cards-item-image {
+  width: 100%;
+  height: 310px;
+  overflow: hidden;
+}
+
+.cards-item-image picture,
+.cards-item-image img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.cards-item:hover .cards-item-image img {
+  transform: scale(1.03);
+}
+
+/* --- Card Content Wrapper --- */
+.cards-item-content {
+  padding: 30px 25px 35px 25px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+/* --- Subtitle --- */
+.cards-item-subtitle {
+  font-size: 14px;
+  color: #777777;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+/* --- Service Title --- */
+.cards-item-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #222222;
+  text-transform: uppercase;
+  margin: 0 0 15px 0;
+  letter-spacing: -0.2px;
+  line-height: 1.3;
+}
+
+/* --- Description --- */
+.cards-item-description {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: #666666;
+  margin-bottom: 30px;
+}
+
+.cards-item-description p {
+  margin: 0;
+}
+
+/* --- CTA Button --- */
+.cards-item-button {
+  display: inline-block;
+  background-color: #ffffff;
+  color: #222222;
+  border: 1px solid #dcdcdc;
+  padding: 11px 30px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0.8px;
+  border-radius: 2px;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+  margin: 0 auto;
+}
+
+/* Default yellow highlight for the first card button */
+.cards-item.is-default-yellow .cards-item-button {
+  background-color: #ffbc00;
+  border-color: #ffbc00;
+  color: #ffffff;
+}
+
+/* Button Hover State */
+.cards-item-button:hover {
+  background-color: #ffbc00;
+  border-color: #ffbc00;
+  color: #ffffff;
+}
+
+/* --- Responsive Breakpoints --- */
+@media (max-width: 1024px) {
+  .cards-grid-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+}
+
+@media (max-width: 640px) {
+  .cards-grid-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .cards-item-image {
+    height: 250px;
+  }
 }
