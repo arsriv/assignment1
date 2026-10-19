@@ -24,6 +24,7 @@
 }
 
 .tabs .tabs-list button {
+  position: relative;
   flex: 0 0 max-content;
   margin: 0;
   border: none;
@@ -43,6 +44,22 @@
   transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
 }
 
+.tabs .tabs-list button::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid transparent;
+  opacity: 0;
+  transition: border-top-color 0.2s ease, opacity 0.2s ease;
+  pointer-events: none;
+}
+
 .tabs .tabs-list button p {
   margin: 0;
 }
@@ -52,24 +69,16 @@
   color: #ffffff;
 }
 
+.tabs .tabs-list button:hover::after,
+.tabs .tabs-list button[aria-selected='true']::after {
+  border-top-color: #ffbc00;
+  opacity: 1;
+}
+
 .tabs .tabs-list button[aria-selected='true'] {
   background-color: #ffbc00;
   color: #ffffff;
   box-shadow: 0 4px 12px rgba(255, 188, 0, 0.3);
-  position: relative;
-}
-
-/* Little speech-bubble indicator pointer under active tab matching reference design */
-.tabs .tabs-list button[aria-selected='true']::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  left: 28px;
-  width: 0;
-  height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-top: 8px solid #ffbc00;
 }
 
 .tabs .tabs-panel {
