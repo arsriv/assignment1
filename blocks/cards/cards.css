@@ -6,9 +6,8 @@
 }
 
 .cards-grid-container {
-  display: grid;
-  /* allow as many columns as fit; each column is at least 240px */
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 35px;
   width: 100%;
   box-sizing: border-box;
@@ -25,7 +24,8 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   height: 100%;
-  min-width: 0; /* prevents long content from forcing overflow */
+  flex: 1 1 240px;
+  min-width: 0;
 }
 
 /* Hover Effect: Card lifts upward with enhanced shadow */
@@ -129,15 +129,21 @@
 /* --- Responsive Breakpoints --- */
 @media (max-width: 1024px) {
   .cards-grid-container {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 25px;
+  }
+
+  .cards-item {
+    flex-basis: 220px;
   }
 }
 
 @media (max-width: 640px) {
   .cards-grid-container {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
+  }
+
+  .cards-item {
+    flex-basis: 100%;
   }
 
   .cards-item-image {
