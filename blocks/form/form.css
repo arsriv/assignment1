@@ -1,166 +1,306 @@
+/* ========================================
+   FORM CONTAINER
+======================================== */
+
+.form {
+  width: 100%;
+  max-width: 100%;
+  color: #222;
+  font-family: Arial, sans-serif;
+}
+
 .form [aria-hidden='true'] {
   display: none;
 }
+
+/* ========================================
+   REQUEST FOR SERVICE HEADING
+======================================== */
+
+.form .form-title {
+  position: relative;
+  margin: 0 0 70px;
+  padding: 0 0 18px;
+  border-bottom: 1px solid #ddd;
+  color: #222;
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 1.3;
+}
+
+.form .form-title strong {
+  font-weight: 700;
+}
+
+/* Yellow underline */
+
+.form .form-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 60px;
+  height: 6px;
+  border-radius: 3px;
+  background-color: #ffbd00;
+}
+
+/* ========================================
+   FORM GRID
+======================================== */
+
+.form form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 40px 38px;
+  width: 100%;
+  align-items: start;
+}
+
+.form .form-field {
+  position: relative;
+  min-width: 0;
+  margin: 0;
+}
+
+.form .form-field + .form-field {
+  margin-top: 0;
+}
+
+/* ========================================
+   HIDE LABELS VISUALLY
+   PLACEHOLDERS REMAIN INSIDE FIELDS
+======================================== */
+
+.form .form-field > label:first-child {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ========================================
+   INPUT FIELDS
+======================================== */
 
 .form input,
 .form textarea,
 .form select,
 .form button {
   box-sizing: border-box;
-  display: block;
   max-width: 100%;
   font: inherit;
+  border-radius: 0;
 }
 
-.form input,
+.form input:not([type='checkbox']):not([type='radio']),
 .form textarea,
 .form select {
-  scroll-margin: 1em;
+  display: block;
   width: 100%;
-  border: 1px solid var(--dark-color);
-  border-radius: 4px;
-  padding: 0.5em 0.75em;
-  background-color: var(--background-color);
-  color: var(--text-color);
-  font-size: var(--body-font-size-s);
+  min-width: 0;
+  padding: 18px 14px;
+  border: 1px solid transparent;
+  background-color: #f7f5f5;
+  color: #222;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
+/* Input height */
+
+.form input:not([type='checkbox']):not([type='radio']) {
+  height: 65px;
+}
+
+/* Textarea */
+
 .form textarea {
+  height: 164px;
+  min-height: 120px;
   resize: vertical;
 }
 
-.form fieldset {
-  appearance: none;
-  margin: 0;
-  border: 0;
-  padding: 0;
-  background-color: transparent;
+/* Placeholder styling */
+
+.form input::placeholder,
+.form textarea::placeholder {
+  color: #858d98;
+  opacity: 1;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
 }
+
+/* Hover */
 
 .form input:hover,
 .form textarea:hover,
-.form select:hover,
-.form button:hover {
-  border-color: var(--link-color);
+.form select:hover {
+  border-color: #ffbd00;
 }
+
+/* Focus */
 
 .form input:focus,
 .form textarea:focus,
 .form select:focus,
 .form button:focus {
-  outline-offset: 4px;
+  outline: 2px solid #ffbd00;
+  outline-offset: 2px;
 }
 
-.form input:disabled,
-.form input:hover:disabled,
-.form input:focus:disabled,
-.form textarea:disabled,
-.form textarea:hover:disabled,
-.form textarea:focus:disabled,
-.form select:disabled,
-.form select:hover:disabled,
-.form select:focus:disabled,
-.form input[readonly],
-.form textarea[readonly],
-.form select[readonly] {
-  border-color: #d1d1d1;
-  background-color: var(--light-color);
-  color: var(--dark-color);
+/* ========================================
+   MESSAGE FIELD
+   FULL WIDTH
+======================================== */
+
+.form .textarea-field {
+  grid-column: 1 / -1;
 }
 
-.form input[readonly]:focus,
-.form textarea[readonly]:focus,
-.form select[readonly]:focus {
-  outline: 0;
+/* ========================================
+   SUBMIT BUTTON
+======================================== */
+
+.form .button-wrapper {
+  display: block;
+  min-width: 0;
+  margin: 0;
 }
+
+.form .button-wrapper button {
+  display: block;
+  width: 100%;
+  min-height: 66px;
+  padding: 18px 24px;
+  border: 0;
+  background-color: #ffbd00;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+.form .button-wrapper button:hover {
+  background-color: #e9aa00;
+}
+
+.form .button-wrapper button:disabled,
+.form .button-wrapper button:hover:disabled {
+  background-color: #777;
+  color: #fff;
+  cursor: progress;
+}
+
+/* ========================================
+   SELECT FIELD
+======================================== */
+
+.form select {
+  height: 65px;
+}
+
+/* ========================================
+   CHECKBOX AND RADIO
+======================================== */
 
 .form input[type='checkbox'],
 .form input[type='radio'] {
-  width: unset;
+  display: inline-block;
+  width: auto;
+  height: auto;
+  padding: 0;
 }
 
-.form label,
-.form legend {
-  display: block;
+.form .form-field.checkbox-field,
+.form .form-field.radio-field {
+  grid-column: 1 / -1;
 }
 
-.form label[data-required]::after,
-.form legend[data-required]::after {
-  content: '*';
-  margin-left: 0.25ch;
-  color: firebrick;
-}
+/* Keep group headings visible */
 
-.form .form-field > label:first-child,
-.form .form-field > legend {
-  font-weight: bold;
-}
-
-.form .form-field + .form-field {
-  margin-top: 1em;
+.form .form-field.checkbox-field > legend,
+.form .form-field.radio-field > legend {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0 0 10px;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+  font-weight: 700;
 }
 
 .form .form-field.checkbox-field label,
 .form .form-field.radio-field label {
   position: relative;
-  padding-left: calc(1em + 1ch);
-  font-size: var(--body-font-size-s);
-  line-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px 4px 0;
+  font-size: 14px;
+  line-height: 1.5;
   cursor: pointer;
 }
 
 .form .form-field.checkbox-field label input,
-.form .form-field.radio-field label input,
-.form .form-field.toggle-field label input {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
+.form .form-field.radio-field label input {
+  position: static;
+  width: auto;
+  height: auto;
   margin: 0;
-  width: 1em;
-  height: 1em;
-  cursor: pointer;
 }
 
-.form .form-field.checkbox-field label input:disabled,
-.form .form-field.radio-field label input:disabled {
-  cursor: default;
+/* ========================================
+   TOGGLE FIELD
+======================================== */
+
+.form .form-field.toggle-field {
+  grid-column: 1 / -1;
 }
 
-@media (width >= 600px) {
-  .form .form-field.checkbox-field,
-  .form .form-field.radio-field {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25ch 1em;
-  }
-}
-
-/* custom toggle field */
-.form .form-field.toggle-field label {
+.form .form-field.toggle-field > label {
   position: relative;
   display: grid;
   grid-template-columns: auto 1fr;
   align-items: center;
-  gap: 1ch;
+  gap: 10px;
+  width: auto;
+  height: auto;
   min-height: 44px;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
 }
 
-/* stylelint-disable-next-line no-descending-specificity */
 .form .form-field.toggle-field label input {
-  width: 2em;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 34px;
+  height: 18px;
+  transform: translateY(-50%);
   opacity: 0;
-  border-radius: 50%;
 }
 
 .form .form-field.toggle-field label span {
   position: relative;
-  width: calc(2em + (2 * 1px));
-  height: calc(1em + (2 * 1px));
-  border-radius: 1em;
-  border: 1px solid var(--dark-color);
-  background-color: var(--dark-color);
-  transition: background-color 0.2s;
+  width: 34px;
+  height: 18px;
+  border: 1px solid #777;
+  border-radius: 18px;
+  background-color: #777;
   cursor: pointer;
 }
 
@@ -169,69 +309,88 @@
   position: absolute;
   top: 50%;
   left: 0;
-  transform: translateY(-50%);
-  width: 1em;
-  height: 1em;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  background-color: var(--background-color);
+  background-color: #fff;
   transition: left 0.2s;
 }
 
 .form .form-field.toggle-field label input:checked + span {
-  background-color: var(--link-color);
+  background-color: #ffbd00;
 }
 
 .form .form-field.toggle-field label input:checked + span::after {
-  left: calc(100% - 1em);
+  left: calc(100% - 16px);
 }
 
-.form .form-field.toggle-field label input:disabled + span {
-  border-color: #d1d1d1;
-  background-color: #d1d1d1;
-  cursor: default;
-}
-
-.form .form-field.toggle-field label input:disabled + span::after {
-  background-color: var(--light-color);
-}
+/* ========================================
+   HELP TEXT
+======================================== */
 
 .form .field-help-text {
-  margin-top: 0.2em;
-  color: var(--dark-color);
-  font-size: var(--body-font-size-xs);
+  margin-top: 6px;
+  color: #777;
+  font-size: 13px;
 }
 
-.form .button-wrapper {
-  margin-top: 1em;
+/* ========================================
+   DISABLED AND READ-ONLY FIELDS
+======================================== */
+
+.form input:disabled,
+.form textarea:disabled,
+.form select:disabled,
+.form input[readonly],
+.form textarea[readonly],
+.form select[readonly] {
+  border-color: #d1d1d1;
+  background-color: #eee;
+  color: #777;
 }
 
-.form .button-wrapper button {
-  width: 100%;
+.form input[readonly]:focus,
+.form textarea[readonly]:focus,
+.form select[readonly]:focus {
+  outline: 0;
 }
 
-.form .button-wrapper button.button:disabled,
-.form .button-wrapper button.button:hover:disabled {
-  border-color: var(--dark-color);
-  background-color: var(--dark-color);
-  color: var(--background-color);
-  cursor: progress;
-}
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
 
-.form .button-wrapper button.button.secondary:disabled,
-.form .button-wrapper button.button.secondary:hover:disabled {
-  border-color: var(--dark-color);
-  background-color: var(--light-color);
-  color: var(--dark-color);
-}
+@media (max-width: 700px) {
+  .form .form-title {
+    margin-bottom: 45px;
+    font-size: 28px;
+  }
 
-@media (width >= 600px) {
+  .form form {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .form .textarea-field,
+  .form .form-field.checkbox-field,
+  .form .form-field.radio-field,
+  .form .form-field.toggle-field {
+    grid-column: 1;
+  }
+
   .form .button-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1ch;
+    grid-column: 1;
+  }
+
+  .form input:not([type='checkbox']):not([type='radio']),
+  .form select {
+    height: 55px;
+  }
+
+  .form textarea {
+    height: 140px;
   }
 
   .form .button-wrapper button {
-    width: max-content;
+    width: 100%;
   }
 }

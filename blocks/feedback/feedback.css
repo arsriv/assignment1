@@ -1,0 +1,44 @@
+/* Feedback block - form and accordion side by side */
+.feedback.block {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  margin-left: -50vw;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 60px 0;
+}
+
+.feedback-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  gap: 40px;
+}
+
+.feedback-half {
+  flex: 1;
+  min-width: 300px;
+}
+
+.feedback-half h1,
+.feedback-half h2 {
+  font-family: Montserrat, sans-serif;
+  font-size: 30px;
+  color: #333;
+  font-weight: 600;
+  margin: 0 0 20px;
+  text-transform: capitalize;
+}
+
+.feedback-half h2 {
+  font-weight: 500;
+}
+
+@media (width <= 768px) {
+  .feedback-half {
+    flex: 0 0 100%;
+  }
+}

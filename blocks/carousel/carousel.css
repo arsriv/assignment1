@@ -1,16 +1,22 @@
 .carousel {
   position: relative;
+  width: 100vw;
+  left: 50%;
+  margin-left: -50vw;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .carousel-track {
   display: flex;
   transition: transform 0.8s ease-in-out;
 }
+.carousel-track.slide-anim { animation: carouselSlideIn 0.5s ease; }
+@keyframes carouselSlideIn { 0% { opacity: 0.6; } 100% { opacity: 1; } }
 
 .carousel-slide {
   min-width: 100%;
-  height: 100vh;
+  height: 550px;
   position: relative;
   overflow: hidden;
 }

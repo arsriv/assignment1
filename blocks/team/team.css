@@ -1,0 +1,131 @@
+/* Team block - based on Davana template section 08 */
+.team.block { width: 100%; padding: 40px 0; }
+
+.team-slider {
+  display: flex;
+  gap: 24px;
+  transition: transform 0.5s ease;
+  will-change: transform;
+}
+.team-slider .team-mate {
+  flex: 0 0 calc((100% - 48px) / 3);
+}
+
+.team-slider.slide-anim { animation: teamSlideIn 0.5s ease; }
+@keyframes teamSlideIn { 0% { opacity: 0.6; } 100% { opacity: 1; } }
+
+.team-mate {
+  position: relative;
+  box-shadow: 1px 1px 5px #ddd;
+  border: 1px solid #ddd;
+  transition: all 0.4s ease;
+}
+.team-mate:before {
+  position: absolute;
+  content: "";
+  bottom: -1px; left: 0; right: 0;
+  height: 5px; width: 100%;
+  background: #ffc300;
+  visibility: hidden;
+  transform: scaleX(0);
+  transition: all 0.3s ease-in-out;
+}
+.team-mate:hover:before {
+  visibility: visible;
+  transform: scaleX(1);
+}
+.member-photo {
+  overflow: hidden;
+  position: relative;
+  background: #F1F1F1;
+}
+.member-photo img {
+  width: auto; margin: 0 auto; display: block;
+  transition: all 0.4s ease;
+}
+.mask {
+  background-color: #fff;
+  position: absolute;
+  text-align: center;
+  height: 100%; width: 100%;
+  left: 0; top: 0;
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+.team-mate:hover .member-photo .mask { opacity: 0.8; }
+.single-team-social {
+  transform: translateY(-50%);
+  top: 50%; position: relative;
+}
+.single-team-social a {
+  color: #333;
+  display: inline-block;
+  height: 40px; width: 40px; line-height: 40px;
+  border: 1px solid #333;
+  margin: 0 6px 8px 6px;
+  transition: all 0.4s ease;
+}
+.team-mate:hover .single-team-social a:nth-child(1) { animation: fadeInLeft 1000ms ease-in-out; }
+.team-mate:hover .single-team-social a:nth-child(2) { animation: fadeInDown 1000ms ease-in-out; }
+.team-mate:hover .single-team-social a:nth-child(3) { animation: fadeInRight 1000ms ease-in-out; }
+.single-team-social a:hover { color: #ffc300; }
+.member-title {
+  padding: 15px 0;
+  background-color: #fff;
+  transition: all 0.4s ease;
+}
+.team-mate:hover .member-title { background-color: #F9F9F9; }
+.member-title h4 {
+  text-transform: uppercase;
+  font-size: 18px;
+  margin: 0 0 10px;
+  text-align: center;
+}
+.member-title p {
+  text-align: center;
+  margin: 0;
+  font-size: 14px; color: #777;
+}
+
+/* Circular dots navigation (owl carousel style) */
+.team.block .team-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 30px;
+  margin-bottom: -30px;
+}
+.team.block .team-dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #ddd;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+.team.block .team-dot.active {
+  background: #ffc300;
+  border-color: #ffc300;
+}
+
+/* Section title styling (heading + paragraph) */
+.team.block .section-title { margin-bottom: 80px; text-align: center; }
+.team.block .section-title h3 { color: #333; font-size: 30px; margin: 0; text-transform: capitalize; position: relative; }
+.team.block .section-title h3 span { font-weight: 400; }
+.team.block .section-title .line { background-color: #ddd; height: 1px; width: 28%; display: inline-block; position: relative; margin: 21px auto 18px; }
+.team.block .section-title .line:before { position: absolute; content: ""; height: 5px; width: 50px; background-color: #ffc300; top: -2px; border-radius: 30px; left: 50%; margin-left: -28px; }
+.team.block .section-title p { margin: auto; padding: 0 20px; width: 65%; position: relative; }
+
+@keyframes fadeInLeft { 0% { opacity: 0; transform: translateX(-20px);} 100% { opacity: 1; transform: translateX(0);} }
+@keyframes fadeInDown { 0% { opacity: 0; transform: translateY(-20px);} 100% { opacity: 1; transform: translateY(0);} }
+@keyframes fadeInRight { 0% { opacity: 0; transform: translateX(20px);} 100% { opacity: 1; transform: translateX(0);} }
+
+/* Responsive */
+@media only screen and (max-width: 768px) {
+  .team.block .team-slider .team-mate { flex: 0 0 calc((100% - 24px) / 2); }
+}
+@media only screen and (max-width: 480px) {
+  .team.block .team-slider .team-mate { flex: 0 0 100%; }
+}

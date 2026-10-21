@@ -7,7 +7,7 @@
 
 .cards-grid-container {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 35px;
   width: 100%;
   box-sizing: border-box;
@@ -140,6 +140,7 @@
 @media (max-width: 640px) {
   .cards-grid-container {
     gap: 20px;
+    flex-wrap:wrap;
   }
 
   .cards-item {

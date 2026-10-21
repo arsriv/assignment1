@@ -84,6 +84,15 @@ body.appear {
   display: block;
 }
 
+div:has(> .form-wrapper):has(> .accordion-wrapper) {
+    display: flex;
+    gap: 20px;
+    padding: 40px;
+}
+.form-wrapper,.accordion-wrapper{
+  flex: 1 1 0;
+  min-width:0
+}
 header {
   height: var(--nav-height);
 }

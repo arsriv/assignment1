@@ -1,160 +1,229 @@
-import { getMetadata } from '../../scripts/aem.js';
-import { loadFragment } from '../fragment/fragment.js';
-
-// media query match that indicates mobile/tablet width
-const isDesktop = window.matchMedia('(min-width: 900px)');
-
-/**
- * Closes the open nav dropdown (desktop) or the nav menu (mobile) on Escape
- * @param {KeyboardEvent} e keydown event
- */
-function closeOnEscape(e) {
-  if (e.code === 'Escape') {
-    const nav = document.getElementById('nav');
-    const navSections = nav.querySelector('.nav-sections');
-    if (!navSections) return;
-    const navSectionExpanded = navSections.querySelector('[aria-expanded="true"]');
-    if (navSectionExpanded && isDesktop.matches) {
-      // eslint-disable-next-line no-use-before-define
-      toggleAllNavSections(navSections);
-      navSectionExpanded.focus();
-    } else if (!isDesktop.matches) {
-      // eslint-disable-next-line no-use-before-define
-      toggleMenu(nav, navSections);
-      nav.querySelector('button').focus();
-    }
-  }
-}
-
-/**
- * Closes the open nav dropdown (desktop) or the nav menu (mobile) when focus leaves the nav
- * @param {FocusEvent} e focusout event
- */
-function closeOnFocusLost(e) {
-  const nav = e.currentTarget;
-  if (!nav.contains(e.relatedTarget)) {
-    const navSections = nav.querySelector('.nav-sections');
-    if (!navSections) return;
-    const navSectionExpanded = navSections.querySelector('[aria-expanded="true"]');
-    if (navSectionExpanded && isDesktop.matches) {
-      // eslint-disable-next-line no-use-before-define
-      toggleAllNavSections(navSections, false);
-    } else if (!isDesktop.matches) {
-      // eslint-disable-next-line no-use-before-define
-      toggleMenu(nav, navSections, false);
-    }
-  }
-}
-
-/**
- * Toggles all nav sections
- * @param {Element} sections The container element
- * @param {Boolean|string} expanded Whether the element should be expanded or collapsed
- */
-function toggleAllNavSections(sections, expanded = false) {
-  if (!sections) return;
-  sections.querySelectorAll('.nav-drop > button').forEach((button) => {
-    button.setAttribute('aria-expanded', expanded);
-  });
-}
-
-/**
- * Toggles the entire nav
- * @param {Element} nav The container element
- * @param {Element} navSections The nav sections within the container element
- * @param {*} forceExpanded Optional param to force nav expand behavior when not null
- */
-function toggleMenu(nav, navSections, forceExpanded = null) {
-  const expanded = forceExpanded !== null ? !forceExpanded : nav.getAttribute('aria-expanded') === 'true';
-  const button = nav.querySelector('.nav-hamburger button');
-  document.body.style.overflowY = (expanded || isDesktop.matches) ? '' : 'hidden';
-  // the desktop nav is always expanded, so aria-expanded only applies to the mobile menu
-  if (isDesktop.matches) nav.removeAttribute('aria-expanded');
-  else nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-  toggleAllNavSections(navSections, expanded || isDesktop.matches ? 'false' : 'true');
-  button.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
-
-  // enable menu collapse on escape keypress
-  if (!expanded || isDesktop.matches) {
-    // collapse menu on escape press
-    window.addEventListener('keydown', closeOnEscape);
-    // collapse menu on focus lost
-    nav.addEventListener('focusout', closeOnFocusLost);
-  } else {
-    window.removeEventListener('keydown', closeOnEscape);
-    nav.removeEventListener('focusout', closeOnFocusLost);
-  }
-}
-
-/**
- * loads and decorates the header, mainly the nav
- * @param {Element} block The header block element
- */
 export default async function decorate(block) {
-  // load nav as fragment
-  const navMeta = getMetadata('nav');
-  const navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
-  const fragment = await loadFragment(navPath);
-
-  // decorate nav DOM
   block.textContent = '';
-  const nav = document.createElement('nav');
-  nav.id = 'nav';
-  while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
 
-  const classes = ['brand', 'sections', 'tools'];
-  classes.forEach((c, i) => {
-    const section = nav.children[i];
-    if (section) section.classList.add(`nav-${c}`);
+  const headerEl = document.createElement('header');
+  headerEl.className = 'main-header header-1';
+
+  headerEl.innerHTML = `
+    <!-- START PRELOADER -->
+    <div id="page-preloader" style="display: none;">
+        <div class="preload-tetrominos">
+            <div class="preload-tetromino preload-box1"></div>
+            <div class="preload-tetromino preload-box2"></div>
+            <div class="preload-tetromino preload-box3"></div>
+            <div class="preload-tetromino preload-box4"></div>
+        </div>
+    </div>
+    <!-- END PRELOADER -->
+    
+    <!-- START TOP AREA -->
+    <div class="top-area">
+        <div class="auto-container">
+            <div class="row align-items-center">
+                <div class="col-lg-7 col-md-12 col-12">
+                    <div class="info-menu">
+                        <ul>
+                            <li><a href="#"><i class="icofont icofont-clock-time"></i> Opening Hours - Monday to Saturday: 9AM to 5PM</a></li>
+                            <li><a href="#"><i class="icofont icofont-compass-alt"></i> Company Profile</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-md-12 col-12">
+                    <div class="social">
+                        <ul>
+                           <li><a href="#" aria-label="Facebook"><i class="icofont icofont-social-facebook"></i></a></li>
+                           <li><a href="#" aria-label="Blogger"><i class="icofont icofont-social-blogger"></i></a></li>
+                           <li><a href="#" aria-label="Instagram"><i class="icofont icofont-social-instagram"></i></a></li>
+                           <li><a href="#" aria-label="YouTube"><i class="icofont icofont-social-youtube-play"></i></a></li>
+                        </ul>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+    <!-- END TOP AREA -->
+
+    <!-- START LOGO AREA -->
+    <div class="logo-area">
+        <div class="auto-container">
+            <div class="row align-items-center">
+                <div class="col-lg-3 col-md-6 col-8 pl-0">
+                    <div class="logo">
+                        <a href="/">
+                           <img class="img-fluid" src="https://bazardeal.com.bd/da/davana-preview4/davana/assets/img/logo.png" alt="Davana Logo">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-9 col-md-6 col-4 d-flex justify-content-end align-items-center header-boxes-wrapper">
+                    <div class="header-info-box d-none d-lg-flex">
+                        <div class="header-info-icon"><span class="lnr lnr-envelope"></span></div>
+                        <div class="header-info-content">
+                            <h6>Mail Us</h6>
+                            <p>your_site@mail.com</p>
+                        </div>
+                    </div>
+                    <div class="header-info-box d-none d-lg-flex">
+                        <div class="header-info-icon"><span class="lnr lnr-phone"></span></div>
+                        <div class="header-info-content">
+                            <h6>Call Now</h6>
+                            <p>(+880) 567-290-456</p>
+                        </div>
+                    </div>
+                    <div class="header-info-box quote-box d-none d-lg-flex">
+                        <a href="#" class="quote-btn">Get A Quote</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END LOGO AREA -->
+
+    <!-- START NAVIGATION AREA (STICKY) -->
+    <div class="sticky-wrapper">
+        <div class="sticky-menu">
+            <div class="mainmenu-area">
+                <div class="auto-container">
+                    <div class="row align-items-center justify-content-between">
+                        
+                        <!-- Mobile Hamburger Button & Nav -->
+                        <div class="col-lg-8 col-md-12 nav-col">
+                            <button class="navbar-toggler d-lg-none" type="button" aria-label="Toggle navigation">
+                                <span class="hamburger-bar"></span>
+                                <span class="hamburger-bar"></span>
+                                <span class="hamburger-bar"></span>
+                            </button>
+
+                            <nav class="navbar navbar-expand-lg">
+                                <ul class="navbar-nav">
+                                    <li class="dropdown active"><a href="index.html" class="nav-link">Home <i class="icofont icofont-simple-down"></i></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="index.html">Home 1</a></li>
+                                            <li><a href="index-2.html">Home 2</a></li>
+                                            <li><a href="index-3.html">Home 3</a></li>
+                                            <li><a href="index-4.html">Home 4</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown"><a href="services.html" class="nav-link">Services <i class="icofont icofont-simple-down"></i></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="services.html">View All Services</a></li>
+                                            <li><a href="single-services.html">Petroleum &amp; Mining</a></li>
+                                            <li><a href="single-services.html">Fuel Controlling</a></li>
+                                            <li><a href="single-services.html">Liquid Chemicals</a></li>
+                                            <li><a href="single-services.html">Monomers &amp; Polymer</a></li>
+                                            <li><a href="single-services.html">Maintenance &amp; Repairs</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a class="nav-link" href="projects.html">Projects</a></li>
+                                    <li class="dropdown"><a class="nav-link" href="#">Pages <i class="icofont icofont-simple-down"></i></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="about.html">About Us</a></li>
+                                            <li><a href="about-2.html">About Us 2</a></li>
+                                            <li><a href="faq.html">FAQ</a></li>
+                                            <li><a href="team.html">Our Team</a></li>
+                                            <li><a href="testimonial.html">Testimonial</a></li>
+                                            <li><a href="404.html">404 Page</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown"><a href="shop.html" class="nav-link">Shop <i class="icofont icofont-simple-down"></i></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="shop.html">Our Shop</a></li>
+                                            <li><a href="shop-details.html">Product Details</a></li>
+                                            <li><a href="shop-cart.html">Shopping Cart</a></li>
+                                            <li><a href="shop-checkout.html">Checkout</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown"><a href="blog.html" class="nav-link">Blog <i class="icofont icofont-simple-down"></i></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="blog.html">Blog</a></li>
+                                            <li><a href="blog-single.html">Blog Single</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="contact.html" class="nav-link">Contact</a></li>
+                                </ul>
+                            </nav>    
+                        </div>
+
+                        <!-- Right Search & Address Area -->
+                        <div class="col-lg-4 col-md-12 d-flex align-items-center justify-content-end search-col">
+                            <div class="header-search">
+                                <ul>
+                                    <li class="menuleft-address d-none d-md-block"><p>10004, BATTERY PARK, NEW YORK<br>NEW YORK, USA</p></li>
+                                    <li class="dropdown menuleft-search">
+                                        <a href="#" id="search-trigger" aria-label="Search"><i class="icofont icofont-search-alt-2"></i></a>
+                                        <ul class="dropdown-menu search-dropdown">
+                                            <li>
+                                                <form action="/search" method="get">
+                                                    <div class="form-group" style="position: relative;">
+                                                        <input class="form-control" name="q" placeholder="Search..." type="text">
+                                                        <button type="submit" class="btn" aria-label="Submit Search"><i class="icofont icofont-search"></i></button>
+                                                    </div>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  `;
+
+  block.append(headerEl);
+
+  // -------------------------------------------------------------
+  // 1. Sticky Header Scroll Listener
+  // -------------------------------------------------------------
+  const stickyWrapper = headerEl.querySelector('.sticky-wrapper');
+  
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 160) {
+      stickyWrapper.classList.add('is-sticky');
+    } else {
+      stickyWrapper.classList.remove('is-sticky');
+    }
   });
 
-  const navBrand = nav.querySelector('.nav-brand');
-  const brandLink = navBrand.querySelector('.button');
-  if (brandLink) {
-    brandLink.className = '';
-    brandLink.closest('.button-container').className = '';
-  }
+  // -------------------------------------------------------------
+  // 2. Hamburger Mobile Toggle
+  // -------------------------------------------------------------
+  const toggler = headerEl.querySelector('.navbar-toggler');
+  const navbar = headerEl.querySelector('.navbar');
 
-  const navSections = nav.querySelector('.nav-sections');
-  if (navSections) {
-    navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((navSection) => {
-      const subList = navSection.querySelector(':scope > ul');
-      if (!subList) return;
-      navSection.classList.add('nav-drop');
-      // wrap the dropdown label in a button so it is announced as expandable
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.setAttribute('aria-expanded', false);
-      [...navSection.childNodes].forEach((node) => {
-        if (node !== subList) button.append(node);
-      });
-      navSection.prepend(button);
-      button.addEventListener('click', () => {
-        const expanded = button.getAttribute('aria-expanded') === 'true';
-        if (isDesktop.matches) {
-          button.focus();
-          toggleAllNavSections(navSections);
-        }
-        button.setAttribute('aria-expanded', !expanded);
-      });
+  toggler.addEventListener('click', () => {
+    toggler.classList.toggle('active');
+    navbar.classList.toggle('show');
+  });
+
+  // Mobile Dropdown Accordions
+  const dropdownLinks = headerEl.querySelectorAll('.navbar-nav .dropdown > a');
+  dropdownLinks.forEach((link) => {
+    link.addEventListener('click', (e) => {
+      if (window.innerWidth < 992) {
+        e.preventDefault();
+        const parent = link.parentElement;
+        parent.classList.toggle('open');
+      }
     });
-  }
+  });
 
-  // hamburger for mobile
-  const hamburger = document.createElement('div');
-  hamburger.classList.add('nav-hamburger');
-  hamburger.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
-      <span class="nav-hamburger-icon"></span>
-    </button>`;
-  hamburger.addEventListener('click', () => toggleMenu(nav, navSections));
-  nav.prepend(hamburger);
-  nav.setAttribute('aria-expanded', 'false');
-  // prevent mobile nav behavior on window resize
-  toggleMenu(nav, navSections, isDesktop.matches);
-  isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
+  // -------------------------------------------------------------
+  // 3. Search Dropdown Popup
+  // -------------------------------------------------------------
+  const searchTrigger = headerEl.querySelector('#search-trigger');
+  const searchDropdown = headerEl.querySelector('.menuleft-search');
 
-  const navWrapper = document.createElement('div');
-  navWrapper.className = 'nav-wrapper';
-  navWrapper.append(nav);
-  block.append(navWrapper);
+  searchTrigger.addEventListener('click', (e) => {
+    e.preventDefault();
+    searchDropdown.classList.toggle('open');
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!searchDropdown.contains(e.target)) {
+      searchDropdown.classList.remove('open');
+    }
+  });
 }

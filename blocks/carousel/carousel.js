@@ -61,6 +61,11 @@ export default function decorate(block) {
     dots.forEach((dot, index) => {
       dot.classList.toggle('active', index === current);
     });
+
+    // trigger animation on every slide change
+    track.classList.remove('slide-anim');
+    void track.offsetWidth;
+    track.classList.add('slide-anim');
   }
 
   prev.addEventListener('click', () => {

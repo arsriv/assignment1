@@ -1,0 +1,89 @@
+/* Accordion block - matches Davana template style.css section 10 (Frequently Asked Question) */
+.accordion.block { width: 100%; }
+.accordion.block .panel-group { margin-top: 0; margin-bottom: 30px; }
+.accordion.block .panel {
+  border: medium none;
+  border-radius: 0;
+  box-shadow: none;
+  margin-bottom: 0;
+  position: relative;
+}
+.accordion .accordion-title {
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 1.2;
+  margin: 0 0 30px;
+  color: #222;
+}
+
+.accordion .accordion-title strong {
+  font-weight: 700;
+}
+.accordion.block .panel-heading {
+  border: medium none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  position: relative;
+}
+.accordion.block .panel-heading .panel-title {
+  font-family: Montserrat, sans-serif;
+  font-weight: 500;
+  margin: 0;
+}
+.accordion.block .accordion-toggle {
+  background-color: #ffc300;
+  color: #fff;
+  font-size: 15px;
+  display: block;
+  padding: 20px 40px;
+  text-transform: capitalize;
+  text-decoration: none;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  position: relative;
+}
+.accordion.block .accordion-toggle i {
+  color: #5d5d5d;
+  float: right;
+  position: absolute;
+  right: 15px;
+  background: #fff;
+  padding: 7px;
+  border-radius: 15px;
+  font-size: 10px;
+  top: 50%;
+  margin-top: -13px;
+}
+.accordion.block .accordion-toggle.collapsed {
+  background-color: #f8f7f7;
+  color: #323232;
+}
+.accordion.block .accordion-toggle.collapsed i {
+  color: #fff;
+  background: #777;
+}
+.accordion.block .panel-collapse {
+  border: medium none;
+  box-shadow: none;
+  overflow: hidden;
+}
+.accordion.block .panel-body {
+  background-color: #fff;
+  border: medium none;
+  padding: 18px;
+  margin: 25px 0;
+  color: #777;
+  line-height: 24px;
+}
+.accordion.block .panel-body p { color: #777; line-height: 24px; margin-bottom: 0; }
+.accordion.block .panel-group .panel + .panel { margin-top: 1px; }
+
+/* List styles (matches original .theme-list-style-one) */
+.accordion.block .theme-list-style-one li {
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 8px;
+}
+.accordion.block .theme-list-style-one li i { padding-right: 3px; }

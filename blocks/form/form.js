@@ -1,10 +1,7 @@
 import { toCamelCase, toClassName } from '../../scripts/aem.js';
 
 /**
- * Creates an HTML element with an optional class name
- * @param {string} tag - HTML tag name
- * @param {string} [className] - Optional CSS class name
- * @returns {HTMLElement} Created element
+ * Creates an HTML element with an optional class name.
  */
 function createElement(tag, className) {
   const el = document.createElement(tag);
@@ -13,10 +10,7 @@ function createElement(tag, className) {
 }
 
 /**
- * Generates a camelCase ID from a name and optional option
- * @param {string} name - Base name for the ID
- * @param {string} [option] - Optional value to append to the ID
- * @returns {string} Generated camelCase ID
+ * Generates a camelCase ID.
  */
 function generateId(name, option = null) {
   const id = toCamelCase(name);
@@ -24,10 +18,7 @@ function generateId(name, option = null) {
 }
 
 /**
- * Creates a help text paragraph with a unique ID
- * @param {string} text - Help text content
- * @param {string} inputId - ID of the associated input field
- * @returns {HTMLParagraphElement} Help text element
+ * Creates help text.
  */
 function writeHelpText(text, inputId) {
   const help = createElement('p', 'field-help-text');
@@ -37,74 +28,96 @@ function writeHelpText(text, inputId) {
 }
 
 /**
- * Creates a label or legend element
- * @param {string} text - Label text content
- * @param {string} [type='label'] - Either 'label' or 'legend'
- * @param {string} [id] - ID of the associated input (for 'label' type only)
- * @param {boolean} [required] - Whether the field is required
- * @returns {HTMLElement} Label or legend element
+ * Creates a label or legend.
  */
 function buildLabel(text, type = 'label', id = null, required = false) {
   const label = createElement(type);
   label.textContent = text;
-  if (id && type === 'label') label.setAttribute('for', id);
-  if (required) label.dataset.required = 'true';
+
+  if (id && type === 'label') {
+    label.setAttribute('for', id);
+  }
+
+  if (required) {
+    label.dataset.required = 'true';
+  }
+
   return label;
 }
 
 /**
- * Creates an input element with specified attributes
- * @param {Object} field - Field configuration object
- * @returns {HTMLInputElement} Input element
+ * Creates an input element.
+ * Uses the label as the placeholder if no placeholder is configured.
  */
 function buildInput(field) {
   const {
-    type, field: fieldName, required, default: defaultValue, placeholder,
+    type,
+    field: fieldName,
+    label,
+    required,
+    default: defaultValue,
+    placeholder,
   } = field;
 
   const input = createElement('input');
+
   input.type = type || 'text';
   input.id = generateId(fieldName);
   input.name = input.id;
   input.required = required === 'true';
-  if (defaultValue) input.value = defaultValue;
-  if (placeholder) input.placeholder = placeholder;
+
+  if (defaultValue) {
+    input.value = defaultValue;
+  }
+
+  input.placeholder = placeholder || label || '';
+
   return input;
 }
 
 /**
- * Creates a textarea element
- * @param {Object} field - Field configuration object
- * @returns {HTMLTextAreaElement} Textarea element
+ * Creates a textarea element.
  */
 function buildTextArea(field) {
   const {
-    field: fieldName, required, default: defaultValue, placeholder,
+    field: fieldName,
+    label,
+    required,
+    default: defaultValue,
+    placeholder,
   } = field;
 
   const textarea = createElement('textarea');
+
   textarea.id = generateId(fieldName);
   textarea.name = textarea.id;
   textarea.required = required === 'true';
   textarea.rows = 5;
-  if (defaultValue) textarea.value = defaultValue;
-  if (placeholder) textarea.placeholder = placeholder;
+
+  if (defaultValue) {
+    textarea.value = defaultValue;
+  }
+
+  textarea.placeholder = placeholder || label || '';
+
   return textarea;
 }
 
 /**
- * Creates a radio/checkbox input for an option
- * @param {Object} field - Field configuration object
- * @param {string} option - Option value
- * @returns {HTMLInputElement} Radio/checkbox input
+ * Creates a radio or checkbox input.
  */
 function buildOptionInput(field, option) {
   const {
-    type, field: fieldName, default: defaultValue, required,
+    type,
+    field: fieldName,
+    default: defaultValue,
+    required,
   } = field;
+
   const id = generateId(fieldName, option);
 
   const input = createElement('input');
+
   input.type = type;
   input.id = id;
   input.name = generateId(fieldName);
@@ -116,30 +129,38 @@ function buildOptionInput(field, option) {
 }
 
 /**
- * Creates a fieldset containing radio/checkbox options
- * @param {Object} field - Field configuration object
- * @param {string} controlled - Controlled field name
- * @returns {HTMLFieldSetElement} Fieldset containing options
+ * Creates a fieldset containing radio or checkbox options.
  */
 function buildOptions(field, controlled) {
   const {
-    type, options, label, required,
+    type,
+    options,
+    label,
+    required,
   } = field;
+
   if (!options) return null;
 
   const fieldset = createElement('fieldset', `form-field ${type}-field`);
+
   if (controlled) {
     const controller = controlled.split('-')[0];
+
     fieldset.dataset.controller = controller;
     fieldset.dataset.condition = controlled;
   }
-  fieldset.append(buildLabel(label, 'legend', null, required === 'true'));
+
+  fieldset.append(
+    buildLabel(label, 'legend', null, required === 'true'),
+  );
 
   options.split(',').forEach((o) => {
     const option = o.trim();
+
     const input = buildOptionInput(field, option);
     const span = createElement('span');
     const labelEl = buildLabel(option, 'label', input.id);
+
     labelEl.prepend(input, span);
     fieldset.append(labelEl);
   });
@@ -148,16 +169,16 @@ function buildOptions(field, controlled) {
 }
 
 /**
- * Fetches select options from a remote URL
- * @param {URL} url - URL to fetch options from
- * @returns {Promise<Array<HTMLOptionElement>>} Array of option elements
+ * Fetches select options from a URL.
  */
 async function buildOptionsFromUrl(url) {
   const resp = await fetch(url);
   const { data } = await resp.json();
+
   const options = data.map((o) => {
     const { option, value } = o;
     const optionEl = createElement('option');
+
     if (option && value) {
       optionEl.value = value;
       optionEl.textContent = option;
@@ -168,57 +189,76 @@ async function buildOptionsFromUrl(url) {
       optionEl.value = value;
       optionEl.textContent = value;
     }
+
     return optionEl;
   });
+
   return options;
 }
 
 /**
- * Creates a select dropdown field
- * @param {Object} field - Field configuration object
- * @param {string} controlled - Controlled field name
- * @returns {HTMLElement} Wrapper div containing select element
+ * Creates a select dropdown field.
  */
 function buildSelect(field, controlled) {
   const {
-    type, options, field: fieldName, label, required, placeholder,
+    type,
+    options,
+    field: fieldName,
+    label,
+    required,
+    placeholder,
   } = field;
+
   if (!options) return null;
 
   const wrapper = createElement('div', `form-field ${type}-field`);
+
   if (controlled) {
     const controller = controlled.split('-')[0];
+
     wrapper.dataset.controller = controller;
     wrapper.dataset.condition = controlled;
   }
-  wrapper.append(buildLabel(label, 'label', generateId(fieldName), required === 'true'));
+
+  wrapper.append(
+    buildLabel(label, 'label', generateId(fieldName), required === 'true'),
+  );
 
   const select = createElement('select');
+
   select.id = generateId(fieldName);
   select.name = select.id;
   select.required = required === 'true';
+
   wrapper.append(select);
 
-  if (placeholder) {
+  if (placeholder || label) {
     const placeholderOption = createElement('option');
+
     placeholderOption.value = '';
-    placeholderOption.textContent = placeholder;
+    placeholderOption.textContent = placeholder || label;
     placeholderOption.disabled = true;
     placeholderOption.selected = true;
+
     select.append(placeholderOption);
   }
 
   try {
     const url = new URL(options);
+
     buildOptionsFromUrl(url).then((os) => {
       select.append(...os);
+    }).catch((error) => {
+      console.error('Could not load select options:', error);
     });
   } catch (error) {
     options.split(',').forEach((o) => {
       const option = o.trim();
       const optionEl = createElement('option');
+
       optionEl.value = option;
       optionEl.textContent = option;
+
       select.append(optionEl);
     });
   }
@@ -227,24 +267,29 @@ function buildSelect(field, controlled) {
 }
 
 /**
- * Creates a toggle switch field (styled checkbox)
- * @param {Object} field - Field configuration object
- * @param {string} controlled - Controlled field name
- * @returns {HTMLElement} Wrapper div containing toggle switch
+ * Creates a toggle switch field.
  */
 function buildToggle(field, controlled) {
   const {
-    label, required, default: defaultValue,
+    label,
+    required,
+    default: defaultValue,
   } = field;
 
   const wrapper = createElement('div', 'form-field toggle-field');
+
   if (controlled) {
     const controller = controlled.split('-')[0];
+
     wrapper.dataset.controller = controller;
     wrapper.dataset.condition = controlled;
   }
 
-  const input = buildOptionInput({ ...field, type: 'checkbox' }, defaultValue || 'true');
+  const input = buildOptionInput(
+    { ...field, type: 'checkbox' },
+    defaultValue || 'true',
+  );
+
   input.setAttribute('role', 'switch');
   input.setAttribute('aria-checked', input.checked);
 
@@ -254,6 +299,7 @@ function buildToggle(field, controlled) {
 
   const span = createElement('span');
   const labelEl = buildLabel(label, 'label', input.id, required === 'true');
+
   labelEl.prepend(input, span);
   wrapper.append(labelEl);
 
@@ -261,61 +307,65 @@ function buildToggle(field, controlled) {
 }
 
 /**
- * Creates a button element
- * @param {Object} field - Field configuration object
- * @returns {HTMLButtonElement} Button element
+ * Creates a button.
  */
 function buildButton(field) {
   const { type, label } = field;
+
   const button = createElement('button');
+
   button.className = 'button';
   button.type = type;
   button.textContent = label;
-  if (type === 'reset') button.classList.add('secondary');
+
+  if (type === 'reset') {
+    button.classList.add('secondary');
+  }
+
   return button;
 }
 
 /**
- * Toggles visibility of conditional fields based on the selected input
- * @param {Event} e - Change event
- * @param {Map} controllerConfig - Map of controller names to controlled fields
+ * Toggles visibility of conditional fields.
  */
 function toggleConditional(e, controllerConfig) {
   const { target } = e;
   const controller = target.name;
-  // check if this is a controlling input
+
   if (controllerConfig.has(controller)) {
     const inputs = [...controllerConfig.get(controller)];
-    inputs.forEach((i) => {
-      const field = i.closest('.form-field');
+
+    inputs.forEach((input) => {
+      const field = input.closest('.form-field');
+
+      if (!field) return;
+
       const { condition } = field.dataset;
       const conditionMet = condition.includes(toClassName(target.value));
+
       field.setAttribute('aria-hidden', !conditionMet);
 
-      // toggle required and tabindex based on visibility
       if (conditionMet) {
-        if (i.dataset.originalRequired === 'true') {
-          i.setAttribute('required', '');
+        if (input.dataset.originalRequired === 'true') {
+          input.setAttribute('required', '');
         }
-        i.removeAttribute('tabindex');
+
+        input.removeAttribute('tabindex');
       } else {
-        i.removeAttribute('required');
-        i.setAttribute('tabindex', '-1'); // remove from tab order when hidden
+        input.removeAttribute('required');
+        input.setAttribute('tabindex', '-1');
       }
     });
   }
 }
 
 /**
- * Sets initial visibility of conditional fields based on default values.
- * @param {HTMLFormElement} form - Form element
- * @param {Map} controllerConfig - Map of controller names to controlled fields.
+ * Initializes conditional fields.
  */
 function initConditionals(form, controllerConfig) {
-  // for each controller, find its current value and apply conditions
   controllerConfig.forEach((controlledInputs, controller) => {
-    // find the controlling input - could be radio/checkbox or select
     let controllerValue = null;
+
     const checked = form.querySelector(`[name="${controller}"]:checked`);
     const select = form.querySelector(`select[name="${controller}"]`);
 
@@ -326,16 +376,19 @@ function initConditionals(form, controllerConfig) {
     }
 
     if (controllerValue) {
-      // set correct visibility for each controlled field
       controlledInputs.forEach((input) => {
         const field = input.closest('.form-field');
+
+        if (!field) return;
+
         const { condition } = field.dataset;
-        const conditionMet = condition.includes(toClassName(controllerValue));
+        const conditionMet = condition.includes(
+          toClassName(controllerValue),
+        );
+
         field.setAttribute('aria-hidden', !conditionMet);
 
-        // store original required state and toggle based on visibility
         if (input.hasAttribute('required')) {
-          // store original required state if not already stored
           if (!input.dataset.originalRequired) {
             input.dataset.originalRequired = 'true';
           }
@@ -345,7 +398,6 @@ function initConditionals(form, controllerConfig) {
           }
         }
 
-        // remove from tab order when hidden
         if (conditionMet) {
           input.removeAttribute('tabindex');
         } else {
@@ -353,21 +405,21 @@ function initConditionals(form, controllerConfig) {
         }
       });
     } else {
-      // if no input is checked, hide all controlled fields
       controlledInputs.forEach((input) => {
         const field = input.closest('.form-field');
+
+        if (!field) return;
+
         field.setAttribute('aria-hidden', true);
 
-        // remove required attribute when hidden
         if (input.hasAttribute('required')) {
-          // store original required state if not already stored
           if (!input.dataset.originalRequired) {
             input.dataset.originalRequired = 'true';
           }
+
           input.removeAttribute('required');
         }
 
-        // remove from tab order when hidden
         input.setAttribute('tabindex', '-1');
       });
     }
@@ -375,62 +427,56 @@ function initConditionals(form, controllerConfig) {
 }
 
 /**
- * Sets up conditional field visibility and ARIA relationships
- * @param {HTMLFormElement} form - Form element
+ * Enables conditional fields.
  */
 function enableConditionals(form) {
-  // find controlled fields
   const controlled = [...form.querySelectorAll('[data-controller]')];
-
-  // create a map of controller names to controlled fields
   const controllerConfig = new Map();
 
-  controlled.forEach((c) => {
-    const input = c.querySelector('input, textarea, select');
-    const { controller } = c.dataset;
+  controlled.forEach((container) => {
+    const input = container.querySelector('input, textarea, select');
+    const { controller } = container.dataset;
 
-    // add to controller map
-    if (!controllerConfig.has(controller)) controllerConfig.set(controller, []);
+    if (!input) return;
+
+    if (!controllerConfig.has(controller)) {
+      controllerConfig.set(controller, []);
+    }
+
     controllerConfig.get(controller).push(input);
 
-    // set up aria relationships
-    if (input && input.id) {
-      // find the controlling input(s)
-      const controllerInputs = form.querySelectorAll(`[name="${controller}"]`);
+    if (input.id) {
+      const controllerInputs = form.querySelectorAll(
+        `[name="${controller}"]`,
+      );
 
-      // set aria-controls on controlling inputs
       controllerInputs.forEach((controllerInput) => {
-        // get existing aria-controls or initialize empty
         const existingControls = controllerInput.getAttribute('aria-controls') || '';
-        const controlsArray = existingControls.split(' ').filter((ec) => ec);
+        const controlsArray = existingControls.split(' ').filter((item) => item);
 
-        // add this input's id if not already present
         if (!controlsArray.includes(input.id)) {
           controlsArray.push(input.id);
         }
 
-        // update aria-controls attribute
-        controllerInput.setAttribute('aria-controls', controlsArray.join(' '));
+        controllerInput.setAttribute(
+          'aria-controls',
+          controlsArray.join(' '),
+        );
 
-        // set aria-controlledby on the controlled input
         input.setAttribute('aria-controlledby', controllerInput.id);
       });
     }
   });
 
-  // initialize conditional visibility
   initConditionals(form, controllerConfig);
 
-  // add single event listener for ALL controlling inputs
   form.addEventListener('change', (e) => {
     toggleConditional(e, controllerConfig);
   });
 }
 
 /**
- * Enables or disables all form elements
- * @param {HTMLFormElement} form - Form element
- * @param {boolean} [disabled=true] - Whether to disable the form
+ * Enables or disables all form elements.
  */
 function toggleForm(form, disabled = true) {
   [...form.elements].forEach((el) => {
@@ -439,35 +485,41 @@ function toggleForm(form, disabled = true) {
 }
 
 /**
- * Generates form submission payload from form elements
- * @param {HTMLFormElement} form - Form element
- * @returns {Object} Payload object with form data
+ * Generates the form submission payload.
  */
 function generatePayload(form) {
   const payload = {};
+
   [...form.elements].forEach((field) => {
     if (field.name && !field.disabled) {
       if (field.type === 'radio') {
-        if (field.checked) payload[field.name] = field.value;
+        if (field.checked) {
+          payload[field.name] = field.value;
+        }
       } else if (field.type === 'checkbox') {
-        if (field.checked) payload[field.name] = payload[field.name] ? `${payload[field.name]},${field.value}` : field.value;
+        if (field.checked) {
+          payload[field.name] = payload[field.name]
+            ? `${payload[field.name]},${field.value}`
+            : field.value;
+        }
       } else {
         payload[field.name] = field.value;
       }
     }
   });
+
   return payload;
 }
 
 /**
- * Handles form submission
- * @param {HTMLFormElement} form - Form element to submit
- * @returns {Promise<void>}
+ * Handles form submission.
  */
 async function handleSubmit(form) {
   try {
     const payload = generatePayload(form);
+
     toggleForm(form);
+
     const response = await fetch(form.dataset.action, {
       method: 'POST',
       body: JSON.stringify({ data: payload }),
@@ -475,6 +527,7 @@ async function handleSubmit(form) {
         'Content-Type': 'application/json',
       },
     });
+
     if (response.ok) {
       if (form.dataset.confirmation) {
         window.location.href = form.dataset.confirmation;
@@ -484,7 +537,6 @@ async function handleSubmit(form) {
       throw new Error(error);
     }
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(error);
   } finally {
     toggleForm(form, false);
@@ -492,14 +544,13 @@ async function handleSubmit(form) {
 }
 
 /**
- * Sets up form submission handler
- * @param {HTMLFormElement} form - Form element
- * @param {string} submit - Submit URL
- * @param {Array<Object>} fields - Array of field configurations
+ * Sets up form submission.
  */
 function enableSubmission(form, submit, fields) {
   form.dataset.action = submit;
+
   const confirmation = fields.find((f) => f.type === 'confirmation');
+
   if (confirmation) {
     form.dataset.confirmation = confirmation.label || confirmation.default;
   }
@@ -508,19 +559,25 @@ function enableSubmission(form, submit, fields) {
     e.preventDefault();
 
     const valid = form.reportValidity();
+
     if (valid) {
       handleSubmit(form);
     } else {
       const firstInvalid = form.querySelector(':invalid:not(fieldset)');
+
       if (firstInvalid) {
         firstInvalid.focus();
-        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        firstInvalid.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+
         firstInvalid.setAttribute('aria-invalid', true);
       }
     }
   });
 
-  // clear aria-invalid on field change
   form.addEventListener('input', (e) => {
     if (e.target.hasAttribute('aria-invalid')) {
       if (e.target.validity.valid) {
@@ -531,67 +588,90 @@ function enableSubmission(form, submit, fields) {
 }
 
 /**
- * Creates a form field based on field configuration
- * @param {Object} field - Field configuration object
- * @returns {HTMLElement} Form field element (fieldset, div, or button)
+ * Creates a form field.
  */
 function buildField(field) {
   const {
-    type, label, help, field: fieldName, conditional,
+    type,
+    label,
+    help,
+    field: fieldName,
+    conditional,
   } = field;
+
   const controlled = conditional || null;
 
-  // submit/reset buttons stand alone
+  // Submit and reset buttons
   if (type === 'submit' || type === 'reset') {
     return buildButton(field);
   }
 
-  // radio/checkbox groups get a fieldset
+  // Radio and checkbox fields
   if (type === 'radio' || type === 'checkbox') {
     const fieldset = buildOptions(field, controlled);
-    if (help) {
+
+    if (help && fieldset) {
       const helpText = writeHelpText(help, generateId(fieldName));
       fieldset.append(helpText);
     }
+
     return fieldset;
   }
 
+  // Toggle fields
   if (type === 'toggle') {
     const toggle = buildToggle(field, controlled);
+
     if (help) {
       const helpText = writeHelpText(help, generateId(fieldName));
       toggle.append(helpText);
     }
+
     return toggle;
   }
 
+  // Select fields
   if (type === 'select') {
     const select = buildSelect(field, controlled);
-    if (help) {
+
+    if (help && select) {
       const helpText = writeHelpText(help, generateId(fieldName));
       select.append(helpText);
     }
+
     return select;
   }
 
-  // inputs and textareas get a wrapper div
-  const wrapper = createElement('div', `form-field ${type}-field`);
+  // Input and textarea wrappers.
+  // The textarea gets an extra class to make it span both columns.
+  const wrapper = createElement(
+    'div',
+    `form-field ${type}-field${type === 'textarea' ? ' textarea-field' : ''}`,
+  );
+
   if (controlled) {
     const controller = controlled.split('-')[0];
+
     wrapper.dataset.controller = controller;
     wrapper.dataset.condition = controlled;
   }
-  const inputId = generateId(fieldName);
-  wrapper.append(buildLabel(label, 'label', inputId, field.required === 'true'));
 
-  // create help text first to get id
+  const inputId = generateId(fieldName);
+
+  wrapper.append(
+    buildLabel(label, 'label', inputId, field.required === 'true'),
+  );
+
   let helpText;
+
   if (help) {
     helpText = writeHelpText(help, inputId);
     wrapper.append(helpText);
   }
 
-  const input = type === 'textarea' ? buildTextArea(field) : buildInput(field);
+  const input = type === 'textarea'
+    ? buildTextArea(field)
+    : buildInput(field);
 
   if (type === 'textarea') {
     wrapper.append(input);
@@ -599,21 +679,21 @@ function buildField(field) {
     wrapper.insertBefore(input, wrapper.firstChild.nextSibling);
   }
 
-  if (help) input.setAttribute('aria-describedby', helpText.id);
+  if (help) {
+    input.setAttribute('aria-describedby', helpText.id);
+  }
 
   return wrapper;
 }
 
 /**
- * Creates a complete form from field configurations
- * @param {Array<Object>} fields - Array of field configurations
- * @returns {HTMLFormElement} Complete form element
+ * Builds the complete form.
  */
 function buildForm(fields, submit) {
   const form = createElement('form');
+
   form.setAttribute('novalidate', '');
 
-  // group buttons at the end
   const buttons = [];
 
   fields.forEach((field) => {
@@ -624,44 +704,79 @@ function buildForm(fields, submit) {
     }
   });
 
-  // add buttons in a wrapper (if any)
+  // Add buttons at the end.
   if (buttons.length) {
     const buttonWrapper = createElement('div', 'button-wrapper');
-    buttons.forEach((button) => buttonWrapper.append(buildField(button)));
+
+    buttons.forEach((button) => {
+      buttonWrapper.append(buildField(button));
+    });
+
     form.append(buttonWrapper);
   }
 
   enableConditionals(form);
 
-  if (submit) enableSubmission(form, submit, fields);
+  if (submit) {
+    enableSubmission(form, submit, fields);
+  }
 
   return form;
 }
 
 /**
- * Initializes form block with data from JSON endpoint
- * @param {HTMLElement} block - Form block element
+ * Initializes the form block.
  */
 export default function decorate(block) {
   block.style.visibility = 'hidden';
-  const [source, submit] = [...block.querySelectorAll('a[href]')].map((a) => a.href);
+
+  const [source, submit] = [...block.querySelectorAll('a[href]')]
+    .map((a) => a.href);
+
   if (source) {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(async (entry) => {
         if (entry.isIntersecting) {
           try {
-            const resp = await fetch(new URL(source, window.location.origin));
-            if (!resp.ok) throw new Error(`${resp.status}: ${resp.statusText}`);
+            const resp = await fetch(
+              new URL(source, window.location.origin),
+            );
+
+            if (!resp.ok) {
+              throw new Error(`${resp.status}: ${resp.statusText}`);
+            }
+
             const { data } = await resp.json();
-            if (!data) throw new Error(`No form fields at ${source}`);
+
+            if (!data) {
+              throw new Error(`No form fields at ${source}`);
+            }
+
             const form = buildForm(data, submit);
-            block.replaceChildren(form);
+
+            // Create the Request For Service heading.
+            const heading = createElement('h2', 'form-title');
+
+            const boldText = createElement('strong');
+            boldText.textContent = 'Request For';
+
+            heading.append(
+              boldText,
+              document.createTextNode(' Service'),
+            );
+
+            // Insert heading before the generated form.
+            block.replaceChildren(heading, form);
+
             block.removeAttribute('style');
           } catch (error) {
-            // eslint-disable-next-line no-console
             console.error('Could not build form from', source, error);
-            block.parentElement.remove();
+
+            if (block.parentElement) {
+              block.parentElement.remove();
+            }
           }
+
           observer.disconnect();
         }
       });
@@ -669,8 +784,10 @@ export default function decorate(block) {
 
     observer.observe(block);
   } else {
-    // eslint-disable-next-line no-console
     console.error('Unable to create form without source');
-    block.parentElement.remove();
+
+    if (block.parentElement) {
+      block.parentElement.remove();
+    }
   }
 }

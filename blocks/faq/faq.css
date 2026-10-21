@@ -1,0 +1,8 @@
+/* FAQ block - based on Davana template section 10 */
+.faq.block { width: 100%; padding: 40px 0; }
+.faq-list { max-width: 800px; margin: 0 auto; }
+.faq-item { border: medium none; border-radius: 0; box-shadow: none; margin-bottom: 0; position: relative; }
+.faq-question { background-color: #f8f7f7; color: #323232; font-size: 15px; display: block; width: 100%; text-align: left; padding: 20px 40px; text-transform: capitalize; border: none; cursor: pointer; font-weight: 500; font-family: Montserrat, sans-serif; }
+.faq-question[aria-expanded="true"] { background-color: #ffc300; color: #fff; }
+.faq-answer { background-color: #fff; border: medium none; padding: 18px; margin: 25px 0; color: #777; line-height: 24px; }
+.faq-answer ul { margin-top: 20px; }
